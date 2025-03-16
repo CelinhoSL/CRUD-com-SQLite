@@ -13,9 +13,14 @@ namespace CRUD_com_SQlite.Helpers
     {
         readonly SQLiteAsyncConnection _conn;
 
-        public SQLiteDatabaseHelper(string path)
+        public SQLiteDatabaseHelper(string dbName)
         {
-            _conn = new SQLiteAsyncConnection(path);
+            
+            string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string dbPath = Path.Combine(folderPath, dbName);
+
+            
+            _conn = new SQLiteAsyncConnection(dbPath);
             _conn.CreateTableAsync<Produto>().Wait();
         }
 
@@ -42,7 +47,7 @@ namespace CRUD_com_SQlite.Helpers
         }
         public Task<List<Produto>> Search(string q)
         {
-            string sql = "SELECT * Produto WHERE descricao LIKE '%" + q + "%' ";
+            string sql = "SELECT *  FROM Produto WHERE descricao LIKE '%" + q + "%' ";
             return _conn.QueryAsync<Produto>(sql);
         }
 
