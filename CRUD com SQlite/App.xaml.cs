@@ -1,4 +1,5 @@
 ﻿using CRUD_com_SQlite.Helpers;
+using System.Globalization;
 
 namespace CRUD_com_SQlite
 {
@@ -27,7 +28,8 @@ namespace CRUD_com_SQlite
         {
             InitializeComponent();
 
-            //MainPage = new AppShell();
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR");
+            
 
             MainPage = new NavigationPage(new Views.ListaProduto());
         }

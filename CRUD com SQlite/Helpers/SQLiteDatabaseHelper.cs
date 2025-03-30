@@ -31,9 +31,9 @@ namespace CRUD_com_SQlite.Helpers
 
         public Task<List<Produto>> Update(Produto p)
         {
-            string sql = "UPDATE Produto SET Descricao=?, Quantidade=?, Preco=? WHERE Id=?";
+            string sql = "UPDATE Produto SET Descricao=?, Categoria=?, Quantidade=?, Preco=? WHERE Id=?";
             return _conn.QueryAsync<Produto>(
-                sql, p.Descricao, p.Quantidade, p.Preco, p.Id
+                sql, p.Descricao, p.Categoria, p.Quantidade, p.Preco, p.Id
                 );
         }
 
@@ -45,12 +45,31 @@ namespace CRUD_com_SQlite.Helpers
         {
             return _conn.Table<Produto>().ToListAsync();
         }
+
+
         public Task<List<Produto>> Search(string q)
         {
-            string sql = "SELECT *  FROM Produto WHERE descricao LIKE '%" + q + "%' ";
+            string sql = "SELECT *  FROM Produto WHERE descricao LIKE '%" + q + "%' OR categoria LIKE '%" + q + "%' ";
             return _conn.QueryAsync<Produto>(sql);
         }
 
+        public Task<List<Produto>> GetTag()
+        {
+            return _conn.Table<Produto>()
+                        .ToListAsync()
+                        .ContinueWith(task =>
+                        {
+                            var produtos = task.Result;
+                            var resultado = produtos.GroupBy(p => p.Categoria)
+                                                    .Select(g => new Produto
+                                                    {
+                                                        Categoria = g.Key,
+                                                        TotalCategoria = g.Sum(p => p.Total)
+                                                    })
+                                                    .ToList();
+                            return resultado;
+                        });
+        }
 
     }
 }

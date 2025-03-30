@@ -11,6 +11,7 @@ namespace CRUD_com_SQlite.Models
     {
         double _quantidade;
         string _descricao;
+        string _categoria;
         [AutoIncrement, PrimaryKey]
         public int Id { get; set; }
         public string Descricao {
@@ -24,6 +25,21 @@ namespace CRUD_com_SQlite.Models
                 _descricao = value;
             }
         }
+
+        public string Categoria
+        {
+            get => _categoria;
+            set
+            {
+                if (value == null)
+                {
+                    throw new Exception("Prencha a descrição");
+                }
+
+                _categoria = value;
+            }
+        }
+
         public double Quantidade
         {
             get => _quantidade;
@@ -40,6 +56,8 @@ namespace CRUD_com_SQlite.Models
         }
         public double Preco { get; set; }
         public double Total { get => Quantidade * Preco; }
+        public double TotalCategoria { get; set; }
 
     }
 }
+
